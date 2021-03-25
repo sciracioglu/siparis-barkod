@@ -15,8 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $info = collect(\Illuminate\Support\Facades\DB::select("EXEC spWebSiparisBarkod ?", [request('barcode')])[0]);
-    dd($info);
+
     return view('welcome');
 });
 

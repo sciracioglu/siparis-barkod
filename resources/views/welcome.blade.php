@@ -8,7 +8,6 @@
     <div
         class="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
         <div class="flex items-center space-x-5">
-
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">@{{ company.FATURAUNVAN }}</h1>
                 <p class="text-sm font-medium text-gray-500">@{{ company.HESAPKOD }}
@@ -23,7 +22,7 @@
     </div>
 
     <div
-        class="mt-8 max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
+        class="mt-8 max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense">
         <div class="space-y-6 lg:col-start-1 lg:col-span-2">
             <!-- Description list-->
             <section aria-labelledby="applicant-information-title">
@@ -60,7 +59,8 @@
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="(order,index) in orders" :key="index">
+                            <div v-for="(order,index) in orders" :key="index">
+                            <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                     @{{ order.MALKOD }} - @{{ order.MALAD }}
                                 </td>
@@ -75,6 +75,26 @@
                                     @{{ order.PALETBILGISI }}
                                 </td>
                             </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <tbody class="bg-yellow-100 divide-y divide-yellow-300">
+                                            <tr v-for="(pruduct,index) in products" v-if="order.MALKOD === index">
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    @{{ product.MALAD }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    @{{ product.LOTNO }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    @{{ product.MIKTAR }}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </div>
                             </tbody>
                         </table>
                     </div>
@@ -83,33 +103,33 @@
 
         </div>
 
-        <section aria-labelledby="timeline-title" class="lg:col-start-3 lg:col-span-1">
-            <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
-                <h2 id="timeline-title" class="text-lg font-medium text-gray-900">
-                    Palete Eklenen
-                </h2>
+{{--        <section aria-labelledby="timeline-title" class="lg:col-start-3 lg:col-span-1">--}}
+{{--            <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">--}}
+{{--                <h2 id="timeline-title" class="text-lg font-medium text-gray-900">--}}
+{{--                    Palete Eklenen--}}
+{{--                </h2>--}}
 
-                <ul class="divide-y divide-gray-200" v-if="products.length>0">
-                    <li class="py-4" v-for="(product,pindex) in products" :key="pindex">
-                        <div class="flex space-x-3">
-                            <div class="flex-1 space-y-1">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="text-sm font-medium">@{{ product.LOT }}</h3>
-                                    <p class="text-sm text-gray-500"> @{{ product.MIKTAR }}</p>
-                                </div>
-                                <p class="text-sm text-gray-500"> @{{ product.MALKOD }}</p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <div class="mt-6 flex flex-col justify-stretch">
-                    <button type="button"
-                            class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Advance to offer
-                    </button>
-                </div>
-            </div>
-        </section>
+{{--                <ul class="divide-y divide-gray-200" v-if="products.length>0">--}}
+{{--                    <li class="py-4" v-for="(product,pindex) in products" :key="pindex">--}}
+{{--                        <div class="flex space-x-3">--}}
+{{--                            <div class="flex-1 space-y-1">--}}
+{{--                                <div class="flex items-center justify-between">--}}
+{{--                                    <h3 class="text-sm font-medium">@{{ product.LOT }}</h3>--}}
+{{--                                    <p class="text-sm text-gray-500"> @{{ product.MIKTAR }}</p>--}}
+{{--                                </div>--}}
+{{--                                <p class="text-sm text-gray-500"> @{{ product.MALKOD }}</p>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </li>--}}
+{{--                </ul>--}}
+{{--                <div class="mt-6 flex flex-col justify-stretch">--}}
+{{--                    <button type="button"--}}
+{{--                            class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">--}}
+{{--                        Advance to offer--}}
+{{--                    </button>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </section>--}}
     </div>
 
 @endsection
@@ -127,25 +147,7 @@
                 products: [],
             },
             computed: {
-                totalCheck() {
-                    const total = [];
-                    for (i in this.products) {
-                        total[i.MALKOD] = 0;
-                    }
-                    console.log(total);
-                    this.orders.filter(function (elem) {
-                        for (i in this.products) {
-                            if (i.MALKOD === elem.MALKOD) {
-                                total[i.MALKOD] += i.MIKTAR;
-                                console.log(total);
-                            }
-                        }
-                    });
-                    return total;
 
-                    // let sum = this.products.reduce((acc, item) => acc + item.MIKTAR, 0);
-                    // return sum;
-                }
             },
             methods: {
                 find() {
@@ -161,6 +163,10 @@
                             }
                             if (data.products && self.isCompany === true) {
                                 self.products.push(data.products);
+                                axios.post('/barcode',{product:data.products})
+                                    .then(function(response){
+                                        console.log(response);
+                                    });
                             } else if (data.products && self.isCompany === false) {
                                 alert('once firma secmelisiniz');
                             }
