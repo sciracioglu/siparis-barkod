@@ -22,116 +22,72 @@
     </div>
 
     <div
-        class="mt-8 max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense">
-        <div class="space-y-6 lg:col-start-1 lg:col-span-2">
+        class="mt-8 max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense prose">
+        <div class="space-y-6 lg:col-start-1 lg:col-span-2 ">
             <!-- Description list-->
             <section aria-labelledby="applicant-information-title">
                 <div class="bg-white shadow sm:rounded-lg">
-                    <div class="px-4 py-5 sm:px-6">
-                        <h2 id="applicant-information-title" class="text-lg leading-6 font-medium text-gray-900">
-                            Siparisler
-                        </h2>
-                        <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                            Firmaya gonderilecek urunler
-                        </p>
-                    </div>
-                    <div class="border-t border-gray-200 px-4 py-5 sm:px-6" v-if="orders.length>0">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Ürün Adı
-                                </th>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="px-4 py-5 sm:px-6">
+                            <h2 id="applicant-information-title" class="text-lg leading-6 font-medium text-gray-900">
+                                Siparisler
+                            </h2>
+                            <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                                Firmaya gonderilecek urunler
+                            </p>
+                        </div>
 
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Miktarı
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Palet Miktarı
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Palet Bilgisi
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                            <div v-for="(order,index) in orders" :key="index">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    @{{ order.MALKOD }} - @{{ order.MALAD }}
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    @{{ order.MIKTAR }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    @{{ order.PALETMIKTAR }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    @{{ order.PALETBILGISI }}
-                                </td>
-                            </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <table class="min-w-full divide-y divide-gray-200">
-                                            <tbody class="bg-yellow-100 divide-y divide-yellow-300">
-                                            <tr v-for="(pruduct,index) in products" v-if="order.MALKOD === index">
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                    @{{ product.MALAD }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    @{{ product.LOTNO }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    @{{ product.MIKTAR }}
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
+                            <div class="mt-4 flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
+                                <div class="max-w-lg w-full lg:max-w-xs">
+                                    <label for="search" class="sr-only">Search</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <!-- Heroicon name: solid/search -->
+                                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                      clip-rule="evenodd"/>
+                                            </svg>
+                                        </div>
+                                        <input id="search" name="search" v-model="search" v-on:keyup.enter="find()"
+                                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white shadow-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
+                                               placeholder="Barkod okutun..." type="search">
+                                    </div>
+                                </div>
                             </div>
-                            </tbody>
-                        </table>
+                    </div>
+
+                    <div class="border-t border-gray-200 px-4 py-5 sm:px-6" v-if="orders.length>0">
+                        <div v-for="(order,index) in orders" :key="index"
+                             class="pl-3 pr-3 grid grid-cols-3 gap-4 mb-3 border-b-2 border-gray-200	rounded">
+                            <div class="col-start-1 col-end-3">@{{ order.MALKOD }} - @{{ order.MALAD }}</div>
+                            <div class="text-right col-start-4 col-end-5">Miktar : <span class=" font-black"> @{{ order.MIKTAR }}</span></div>
+                            <div class="col-start-6 col-end-7">Palet @{{ order.PALETBILGISI }} : @{{ order.PALETMIKTAR }}</div>
+                            <div class="col-span-6 m-1" v-for="(product,pindex) in products"
+                                 v-if="pindex == order.MALKOD && product[0].length > 0" :key="pindex">
+                                <div v-for="(prdk,ndx) in product[0]" :key="ndx"
+                                     class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4 bg-yellow-50 border-b-2 border-yellow-100 rounded">
+                                    <div class="col-start-1 col-end-3">@{{ prdk.LOTNO }}</div>
+                                    <div class="text-right col-start-4 col-end-5 font-black">@{{ prdk.MIKTAR }}</div>
+                                    <div class="text-right col-start-6 col-end-7">
+                                        <button
+                                            type="button"
+                                            @click="destroy(prdk.EVRAKNO, prdk.LOTNO)"
+                                            class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-red-800 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                            <svg  class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
-
         </div>
-
-{{--        <section aria-labelledby="timeline-title" class="lg:col-start-3 lg:col-span-1">--}}
-{{--            <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">--}}
-{{--                <h2 id="timeline-title" class="text-lg font-medium text-gray-900">--}}
-{{--                    Palete Eklenen--}}
-{{--                </h2>--}}
-
-{{--                <ul class="divide-y divide-gray-200" v-if="products.length>0">--}}
-{{--                    <li class="py-4" v-for="(product,pindex) in products" :key="pindex">--}}
-{{--                        <div class="flex space-x-3">--}}
-{{--                            <div class="flex-1 space-y-1">--}}
-{{--                                <div class="flex items-center justify-between">--}}
-{{--                                    <h3 class="text-sm font-medium">@{{ product.LOT }}</h3>--}}
-{{--                                    <p class="text-sm text-gray-500"> @{{ product.MIKTAR }}</p>--}}
-{{--                                </div>--}}
-{{--                                <p class="text-sm text-gray-500"> @{{ product.MALKOD }}</p>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </li>--}}
-{{--                </ul>--}}
-{{--                <div class="mt-6 flex flex-col justify-stretch">--}}
-{{--                    <button type="button"--}}
-{{--                            class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">--}}
-{{--                        Advance to offer--}}
-{{--                    </button>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </section>--}}
     </div>
-
 @endsection
 @section('script')
     <script>
@@ -154,24 +110,45 @@
                     let self = this;
                     axios.get('/barcode?barcode=' + this.search)
                         .then(({data}) => {
-                            if (data.company && self.isCompany === true) {
+                            if (data && self.isCompany === true) {
                                 alert('Acik firmanin isi bitmedi');
-                            } else if (data.company && self.isCompany === false) {
-                                self.company = data.company;
-                                self.orders = data.orders;
+                                self.search = '';
+                            } else if (data && self.isCompany === false) {
+                                self.company = data;
                                 self.isCompany = true;
+                                self.paletReload();
+                                self.search = '';
                             }
-                            if (data.products && self.isCompany === true) {
-                                self.products.push(data.products);
-                                axios.post('/barcode',{product:data.products})
-                                    .then(function(response){
-                                        console.log(response);
-                                    });
-                            } else if (data.products && self.isCompany === false) {
+                            if (!data && self.isCompany === true) {
+                               this.paletStore();
+                            } else if (!data && self.isCompany === false) {
                                 alert('once firma secmelisiniz');
                             }
 
                         });
+                },
+                paletStore(){
+                    let self=this;
+                    axios.post('/barcode',{lotno:this.search, evrakno:this.company.EVRAKNO})
+                        .then(function(response){
+                            self.paletReload();
+                            self.search = '';
+                        });
+                },
+                paletReload(){
+                    let self = this;
+                  axios.get('/palet-list')
+                    .then(({data})=>{
+                        self.orders = data.orders;
+                        self.products = data.products;
+                    });
+                },
+                destroy(evrak_no, lot_no){
+                    let self = this;
+                    axios.delete('/barcode-delete/'+evrak_no+'/'+lot_no)
+                    .then(function(){
+                        self.paletReload();
+                    });
                 }
             }
         })

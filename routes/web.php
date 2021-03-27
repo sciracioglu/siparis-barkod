@@ -20,6 +20,7 @@ Route::get('/', function () {
 });
 
 
-Route::resource('barcode', BarcodeController::class)->only([
-    'index', 'store'
-]);
+Route::get('/barcode', [BarcodeController::class, 'index']);
+Route::post('/barcode', [BarcodeController::class, 'store']);
+Route::get('/palet-list', [BarcodeController::class,'show']);
+Route::delete('/barcode-delete/{evrak_no}/{lot_no}', [BarcodeController::class,'destroy']);

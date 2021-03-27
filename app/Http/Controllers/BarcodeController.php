@@ -11,42 +11,35 @@ class BarcodeController extends Controller
     // 6BB00003001 - 6BB00003031 => Paketteki urun
     public function index()
     {
-        $data = [];
-        $data['orders'] = collect([]);
-        $info = collect(DB::select("EXEC spWebSiparisBarkod ?", [request('barcode')])[0]);
-
-        if ((int) $info['KAYITTIP'] === 1) {
-            $data['company'] = $info;
-            $data['orders'] = collect(DB::select('EXEC spWebSiparisHareket ?', [request('barcode')]));
-
-            return $data;
-        }
-        if ((int) $info['KAYITTIP'] === 2) {
-            $data['products'] = $info;
-
-            return $data;
+        $info = DB::select("EXEC spWebSiparisBarkod ?", [request('barcode')])[0];
+        if ((int) $info->KAYITTIP === 1) {
+            session()->put('evrakno', $info->EVRAKNO);
+            return collect($info);
         }
     }
 
-    public function show()
+    public function show(): array
     {
-        // okutulan paletleri listeler
-        $data = request()->vallidate([
-            'evrakno' => 'required',
-            'malkod' => 'required',
-        ]);
-        return collect(DB::select("EXEC spWebLotHareket ? ?", [data['evrakno'], $data['malkod']]));
+        $data = [];
+        $data['orders'] = DB::select('EXEC spWebSiparisHareket ?', [session('evrakno')]);
+        $data['products']  = [];
+        foreach($data['orders'] as $order){
+            $data['products'][$order->MALKOD][] = DB::select("EXEC spWebLotHareket ?, ?", [session('evrakno'), $order->MALKOD]);
+        }
+        return $data;
     }
 
     public function store(): void
     {
-        dd(request()->all());
         $data = request()->validate([
             'evrakno' => 'required',
             'lotno' => 'required',
         ]);
+        DB::insert('EXEC spWebPaletIns ?, ?', [$data['evrakno'], $data['lotno']]);
+    }
 
-
-        DB::insert('EXEC spWebPaletIns ? ?', [$data['evrakno'], $data['lotno']]);
+    public function destroy(string $evrak_no, string $lot_no): void
+    {
+        DB::delete('EXEC spWebPaletSil ?, ?',[$evrak_no, $lot_no]);
     }
 }
