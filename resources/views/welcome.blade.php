@@ -63,7 +63,7 @@
                              class="pl-3 pr-3 grid grid-cols-3 gap-4 mb-3 border-b-2 border-gray-200	rounded">
                             <div class="col-start-1 col-end-3">@{{ order.MALKOD }} - @{{ order.MALAD }}</div>
                             <div class="text-right col-start-4 col-end-5">Miktar : <span class=" font-black"> @{{ parseInt(order.MIKTAR) }}</span></div>
-                            <div class="col-start-6 col-end-7">Palet @{{ order.PALETBILGISI }} : @{{ order.PALETMIKTAR }}</div>
+                            <div class="col-start-6 col-end-7">Palet @{{ order.PALETBILGISI }} : @{{ parseInt(order.PALETMIKTAR) }}</div>
                             <div class="col-span-6 m-1" v-for="(product,pindex) in products"
                                  v-if="pindex == order.MALKOD && product[0].length > 0" :key="pindex">
                                 <div v-for="(prdk,ndx) in product[0]" :key="ndx"
@@ -89,7 +89,6 @@
                                     <div class="text-right col-start-4 col-end-5 font-black">@{{ itemsWithSubTotal(pindex) }}</div>
                                     <div class="text-right col-start-6 col-end-7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
