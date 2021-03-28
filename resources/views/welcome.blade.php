@@ -62,14 +62,14 @@
                         <div v-for="(order,index) in orders" :key="index"
                              class="pl-3 pr-3 grid grid-cols-3 gap-4 mb-3 border-b-2 border-gray-200	rounded">
                             <div class="col-start-1 col-end-3">@{{ order.MALKOD }} - @{{ order.MALAD }}</div>
-                            <div class="text-right col-start-4 col-end-5">Miktar : <span class=" font-black"> @{{ order.MIKTAR }}</span></div>
+                            <div class="text-right col-start-4 col-end-5">Miktar : <span class=" font-black"> @{{ parseInt(order.MIKTAR) }}</span></div>
                             <div class="col-start-6 col-end-7">Palet @{{ order.PALETBILGISI }} : @{{ order.PALETMIKTAR }}</div>
                             <div class="col-span-6 m-1" v-for="(product,pindex) in products"
                                  v-if="pindex == order.MALKOD && product[0].length > 0" :key="pindex">
                                 <div v-for="(prdk,ndx) in product[0]" :key="ndx"
                                      class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4 bg-yellow-50 border-b-2 border-yellow-100 rounded">
                                     <div class="col-start-1 col-end-3">@{{ prdk.LOTNO }}</div>
-                                    <div class="text-right col-start-4 col-end-5 font-black">@{{ prdk.MIKTAR }}</div>
+                                    <div class="text-right col-start-4 col-end-5 font-black">@{{ parseInt(prdk.MIKTAR) }}</div>
                                     <div class="text-right col-start-6 col-end-7">
                                         <button
                                             type="button"
@@ -113,8 +113,8 @@
             },
             methods: {
                 itemClass(pindex, oindex){
-                  toplam = this.itemsWithSubTotal(pindex);
-                  giden = this.orders[oindex].MIKTAR;
+                  toplam = parseInt(this.itemsWithSubTotal(pindex));
+                  giden = parseInt(this.orders[oindex].MIKTAR);
                     if(toplam < giden){
                         return 'bg-yellow-200 border-yellow-300 text-yellow-500';
                     }
@@ -131,7 +131,7 @@
                     if(items && items.length > 0) {
                         Object.keys(items).forEach(key => {
                             const item = items[key];
-                            toplam = _.sumBy(item, function(o){ console.log(o); return o.MIKTAR});
+                            toplam = _.sumBy(item, function(o){ console.log(o); return parseInt(o.MIKTAR)});
                         })
                     }
                     return toplam;
