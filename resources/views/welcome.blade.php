@@ -30,10 +30,10 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="px-4 py-5 sm:px-6">
                             <h2 id="applicant-information-title" class="text-lg leading-6 font-medium text-gray-900">
-                                Siparisler
+                                Siparişler
                             </h2>
                             <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                                Firmaya gonderilecek urunler
+                                Firmaya gönderilecek ürünler
                             </p>
                         </div>
 
@@ -81,6 +81,15 @@
                                         </button>
                                     </div>
                                 </div>
+                                <div
+                                    class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4  border-b-2  rounded"
+                                    :class="itemClass(pindex,index)"
+                                >
+                                    <div class="col-start-1 col-end-3">Toplam : </div>
+                                    <div class="text-right col-start-4 col-end-5 font-black">@{{ itemsWithSubTotal(pindex) }}</div>
+                                    <div class="text-right col-start-6 col-end-7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -102,10 +111,31 @@
                 orders: [],
                 products: [],
             },
-            computed: {
-
-            },
             methods: {
+                itemClass(pindex, oindex){
+                  toplam = this.itemsWithSubTotal(pindex);
+                  giden = this.orders[oindex].MIKTAR;
+                    if(toplam < giden){
+                        return 'bg-yellow-200 border-yellow-300 text-yellow-500';
+                    }
+                    if(toplam === giden){
+                        return 'bg-green-200 border-green-300 text-green-500';
+                    }
+                    if(toplam > giden){
+                        return 'bg-red-400 border-red-500 text-red-800';
+                    }
+                },
+                itemsWithSubTotal(pindex) {
+                    let items = this.products[pindex];
+                    let toplam = 0;
+                    if(items && items.length > 0) {
+                        Object.keys(items).forEach(key => {
+                            const item = items[key];
+                            toplam = _.sumBy(item, function(o){ console.log(o); return o.MIKTAR});
+                        })
+                    }
+                    return toplam;
+                },
                 find() {
                     let self = this;
                     axios.get('/barcode?barcode=' + this.search)
@@ -127,13 +157,33 @@
 
                         });
                 },
+                bul(){
+                    var items = this.products;
+                    let result = false;
+                    var self = this;
+                    Object.keys(items).forEach(key => {
+                        const item = items[key]
+                        if(self.search != '' && item.length > 0){
+                            let find = _.find(item[0], function(o) {
+                                return o.LOTNO == self.search
+                            });
+                            if(find){
+                                result = true;
+                            }
+                        }
+                    })
+                    return result;
+                },
                 paletStore(){
                     let self=this;
-                    axios.post('/barcode',{lotno:this.search, evrakno:this.company.EVRAKNO})
-                        .then(function(response){
-                            self.paletReload();
-                            self.search = '';
-                        });
+                    let bul = this.bul();
+                    if(!this.bul()) {
+                        axios.post('/barcode', {lotno: this.search, evrakno: this.company.EVRAKNO})
+                            .then(function (response) {
+                                self.paletReload();
+                            });
+                    }
+                    self.search = '';
                 },
                 paletReload(){
                     let self = this;
