@@ -117,7 +117,7 @@
             },
             methods: {
                 focusInput() {
-                    this.$refs.barcode.$el.focus();
+                    this.$refs.barcode.focus();
                 },
                 itemClass(pindex, oindex) {
                     toplam = parseInt(this.itemsWithSubTotal(pindex));
