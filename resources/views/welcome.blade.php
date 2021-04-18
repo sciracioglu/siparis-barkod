@@ -38,32 +38,33 @@
                             </p>
                         </div>
 
-                            <div class="mt-4 flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
-                                <div class="max-w-lg w-full lg:max-w-xs">
-                                    <label for="search" class="sr-only">Search</label>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <!-- Heroicon name: solid/search -->
-                                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path fill-rule="evenodd"
-                                                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                                      clip-rule="evenodd"/>
-                                            </svg>
-                                        </div>
-                                        <input id="search" name="search" v-model="search" v-on:keyup.enter="find()"
-                                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white shadow-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
-                                               placeholder="Barkod okutun..." type="search">
+                        <div class="mt-4 flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
+                            <div class="max-w-lg w-full lg:max-w-xs">
+                                <label for="search" class="sr-only">Search</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <!-- Heroicon name: solid/search -->
+                                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
                                     </div>
+                                    <input ref="barcode" name="search" v-model="search" v-on:keydown.tab="find()"
+                                           class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white shadow-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
+                                           placeholder="Barkod okutun..." type="search">
                                 </div>
                             </div>
+                        </div>
                     </div>
 
                     <div class="border-t border-gray-200 px-4 py-5 sm:px-6" v-if="orders.length>0">
                         <div v-for="(order,index) in orders" :key="index"
                              class="pl-3 pr-3 grid grid-cols-3 gap-4 mb-3 border-b-2 border-gray-200	rounded">
                             <div class="col-start-1 col-end-3">@{{ order.MALKOD }} - @{{ order.MALAD }}</div>
-                            <div class="text-right col-start-4 col-end-5">Miktar : <span class=" font-black"> @{{ parseInt(order.MIKTAR) }}</span></div>
+                            <div class="text-right col-start-4 col-end-5">Miktar :
+                                <span class=" font-black"> @{{ parseInt(order.MIKTAR) }}</span></div>
                             <div class="col-start-6 col-end-7">Palet @{{ order.PALETBILGISI }} : @{{ parseInt(order.PALETMIKTAR) }}</div>
                             <div class="col-span-6 m-1" v-for="(product,pindex) in products"
                                  v-if="pindex == order.MALKOD && product[0].length > 0" :key="pindex">
@@ -76,8 +77,8 @@
                                             type="button"
                                             @click="destroy(prdk.EVRAKNO, prdk.LOTNO)"
                                             class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-red-800 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                            <svg  class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                             </svg>
                                         </button>
                                     </div>
@@ -86,7 +87,7 @@
                                     class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4  border-b-2  rounded"
                                     :class="itemClass(pindex,index)"
                                 >
-                                    <div class="col-start-1 col-end-3">Toplam : </div>
+                                    <div class="col-start-1 col-end-3">Toplam :</div>
                                     <div class="text-right col-start-4 col-end-5 font-black">@{{ itemsWithSubTotal(pindex) }}</div>
                                     <div class="text-right col-start-6 col-end-7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                 </div>
@@ -111,27 +112,35 @@
                 orders: [],
                 products: [],
             },
+            mounted() {
+                this.focusInput();
+            },
             methods: {
-                itemClass(pindex, oindex){
-                  toplam = parseInt(this.itemsWithSubTotal(pindex));
-                  giden = parseInt(this.orders[oindex].MIKTAR);
-                    if(toplam < giden){
+                focusInput() {
+                    this.$refs.barcode.$el.focus();
+                },
+                itemClass(pindex, oindex) {
+                    toplam = parseInt(this.itemsWithSubTotal(pindex));
+                    giden = parseInt(this.orders[oindex].MIKTAR);
+                    if (toplam < giden) {
                         return 'bg-yellow-200 border-yellow-300 text-yellow-500';
                     }
-                    if(toplam === giden){
+                    if (toplam === giden) {
                         return 'bg-green-200 border-green-300 text-green-500';
                     }
-                    if(toplam > giden){
+                    if (toplam > giden) {
                         return 'bg-red-400 border-red-500 text-red-800';
                     }
                 },
                 itemsWithSubTotal(pindex) {
                     let items = this.products[pindex];
                     let toplam = 0;
-                    if(items && items.length > 0) {
+                    if (items && items.length > 0) {
                         Object.keys(items).forEach(key => {
                             const item = items[key];
-                            toplam = _.sumBy(item, function(o){ console.log(o); return parseInt(o.MIKTAR)});
+                            toplam = _.sumBy(item, function (o) {
+                                return parseInt(o.MIKTAR)
+                            });
                         })
                     }
                     return toplam;
@@ -140,6 +149,7 @@
                     let self = this;
                     axios.get('/barcode?barcode=' + this.search)
                         .then(({data}) => {
+                            self.focusInput();
                             if (data && self.isCompany === true) {
                                 alert('Acik firmanin isi bitmedi');
                                 self.search = '';
@@ -150,34 +160,35 @@
                                 self.search = '';
                             }
                             if (!data && self.isCompany === true) {
-                               this.paletStore();
+                                this.paletStore();
                             } else if (!data && self.isCompany === false) {
                                 alert('once firma secmelisiniz');
                             }
 
                         });
                 },
-                bul(){
+                bul() {
                     var items = this.products;
                     let result = false;
                     var self = this;
                     Object.keys(items).forEach(key => {
                         const item = items[key]
-                        if(self.search != '' && item.length > 0){
-                            let find = _.find(item[0], function(o) {
+                        if (self.search != '' && item.length > 0) {
+                            let find = _.find(item[0], function (o) {
                                 return o.LOTNO == self.search
                             });
-                            if(find){
+                            if (find) {
                                 result = true;
                             }
                         }
                     })
+                    this.focusInput();
                     return result;
                 },
-                paletStore(){
-                    let self=this;
+                paletStore() {
+                    let self = this;
                     let bul = this.bul();
-                    if(!this.bul()) {
+                    if (!this.bul()) {
                         axios.post('/barcode', {lotno: this.search, evrakno: this.company.EVRAKNO})
                             .then(function (response) {
                                 self.paletReload();
@@ -185,20 +196,20 @@
                     }
                     self.search = '';
                 },
-                paletReload(){
+                paletReload() {
                     let self = this;
-                  axios.get('/palet-list')
-                    .then(({data})=>{
-                        self.orders = data.orders;
-                        self.products = data.products;
-                    });
+                    axios.get('/palet-list')
+                        .then(({data}) => {
+                            self.orders = data.orders;
+                            self.products = data.products;
+                        });
                 },
-                destroy(evrak_no, lot_no){
+                destroy(evrak_no, lot_no) {
                     let self = this;
-                    axios.delete('/barcode-delete/'+evrak_no+'/'+lot_no)
-                    .then(function(){
-                        self.paletReload();
-                    });
+                    axios.delete('/barcode-delete/' + evrak_no + '/' + lot_no)
+                        .then(function () {
+                            self.paletReload();
+                        });
                 }
             }
         })
