@@ -201,9 +201,10 @@
                     let self = this;
                     axios.get('/palet-list')
                         .then(({data}) => {
+                            self.focusInput();
                             self.orders = data.orders;
                             self.products = data.products;
-                            self.focusInput();
+
                         });
                 },
                 destroy(evrak_no, lot_no) {
