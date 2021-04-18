@@ -203,6 +203,7 @@
                         .then(({data}) => {
                             self.orders = data.orders;
                             self.products = data.products;
+                            self.focusInput();
                         });
                 },
                 destroy(evrak_no, lot_no) {
