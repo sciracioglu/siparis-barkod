@@ -153,18 +153,19 @@
                             if (data && self.isCompany === true) {
                                 alert('Acik firmanin isi bitmedi');
                                 self.search = '';
+                                self.focusInput();
                             } else if (data && self.isCompany === false) {
                                 self.company = data;
                                 self.isCompany = true;
                                 self.paletReload();
                                 self.search = '';
+                                self.focusInput();
                             }
                             if (!data && self.isCompany === true) {
                                 this.paletStore();
                             } else if (!data && self.isCompany === false) {
                                 alert('once firma secmelisiniz');
                             }
-
                         });
                 },
                 bul() {
