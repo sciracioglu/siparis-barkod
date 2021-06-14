@@ -14,6 +14,7 @@ class BarcodeController extends Controller
         $info = DB::select("EXEC spWebSiparisBarkod ?", [request('barcode')])[0];
         if ((int) $info->KAYITTIP === 1) {
             session()->put('evrakno', $info->EVRAKNO);
+
             return collect($info);
         }
     }
@@ -22,10 +23,14 @@ class BarcodeController extends Controller
     {
         $data = [];
         $data['orders'] = DB::select('EXEC spWebSiparisHareket ?', [session('evrakno')]);
-        $data['products']  = [];
-        foreach($data['orders'] as $order){
-            $data['products'][$order->MALKOD][] = DB::select("EXEC spWebLotHareket ?, ?", [session('evrakno'), $order->MALKOD]);
+        $data['products'] = [];
+        foreach ($data['orders'] as $order) {
+            $data['products'][$order->MALKOD][] = DB::select("EXEC spWebLotHareket ?, ?, ?",
+                [session('evrakno'),
+                    $order->MALKOD,
+                    $order->PALETBILGISI]);
         }
+
         return $data;
     }
 
@@ -40,6 +45,6 @@ class BarcodeController extends Controller
 
     public function destroy(string $evrak_no, string $lot_no): void
     {
-        DB::delete('EXEC spWebPaletSil ?, ?',[$evrak_no, $lot_no]);
+        DB::delete('EXEC spWebPaletSil ?, ?', [$evrak_no, $lot_no]);
     }
 }
