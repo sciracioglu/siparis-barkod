@@ -24,11 +24,23 @@ class BarcodeController extends Controller
         $data = [];
         $data['orders'] = DB::select('EXEC spWebSiparisHareket ?', [session('evrakno')]);
         $data['products'] = [];
+        $data['toplam'] = [];
+        foreach ($data['orders'] as $order) {
+            $data['toplam'][$order->PALETBILGISI] = 0;
+        }
         foreach ($data['orders'] as $order) {
             $data['products'][$order->MALKOD][] = DB::select("EXEC spWebLotHareket ?, ?, ?",
                 [session('evrakno'),
                     $order->MALKOD,
                     $order->PALETBILGISI]);
+        }
+
+        foreach ($data['products'] as $products) {
+            foreach ($products as $product) {
+                foreach ($product as $item) {
+                    $data['toplam'][$item->PALETBILGISI] += $item->MIKTAR;
+                }
+            }
         }
 
         return $data;

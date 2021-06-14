@@ -70,9 +70,8 @@
 
                             <div class="col-span-6 m-1" v-for="(product,pindex) in products"
                                  :key="pindex">
-
-                                <div v-if="pindex === order.MALKOD && order.PALETBILGISI === product[0][0].PALETBILGISI && product[0].length > 0">
-                                    <div v-for="(prdk,ndx) in product[0]" :key="ndx"
+                                <div v-if="pindex === order.MALKOD && product[index].length > 0">
+                                    <div v-for="(prdk,ndx) in product[index]" :key="ndx" v-if="order.PALETBILGISI === prdk.PALETBILGISI"
                                          class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4 bg-yellow-50 border-b-2 border-yellow-100 rounded">
                                         <div class="col-start-1 col-end-3">@{{ prdk.LOTNO }}</div>
                                         <div class="text-right col-start-4 col-end-5 font-black">@{{ parseInt(prdk.MIKTAR) }}</div>
@@ -92,7 +91,7 @@
                                         :class="itemClass(pindex,index)"
                                     >
                                         <div class="col-start-1 col-end-3">Toplam :</div>
-                                        <div class="text-right col-start-4 col-end-5 font-black">@{{ itemsWithSubTotal(pindex) }}</div>
+                                        <div class="text-right col-start-4 col-end-5 font-black">@{{ sums[order.PALETBILGISI] }}</div>
                                         <div class="text-right col-start-6 col-end-7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                     </div>
                                 </div>
@@ -116,6 +115,7 @@
                 company: [],
                 orders: [],
                 products: [],
+                sums: [],
             },
             mounted() {
                 this.focusInput();
@@ -125,7 +125,7 @@
                     this.$refs.barcode.focus();
                 },
                 itemClass(pindex, oindex) {
-                    toplam = parseInt(this.itemsWithSubTotal(pindex));
+                    toplam = parseInt(this.sums[this.orders[oindex].PALETBILGISI]);
                     giden = parseInt(this.orders[oindex].MIKTAR);
                     if (toplam < giden) {
                         return 'bg-yellow-200 border-yellow-300 text-yellow-500';
@@ -137,19 +137,7 @@
                         return 'bg-red-400 border-red-500 text-red-800';
                     }
                 },
-                itemsWithSubTotal(pindex) {
-                    let items = this.products[pindex];
-                    let toplam = 0;
-                    if (items && items.length > 0) {
-                        Object.keys(items).forEach(key => {
-                            const item = items[key];
-                            toplam = _.sumBy(item, function (o) {
-                                return parseInt(o.MIKTAR)
-                            });
-                        })
-                    }
-                    return toplam;
-                },
+
                 find() {
                     let self = this;
                     axios.get('/barcode?barcode=' + this.search)
@@ -209,6 +197,7 @@
                             self.focusInput();
                             self.orders = data.orders;
                             self.products = data.products;
+                            self.sums = data.toplam;
 
                         });
                 },
