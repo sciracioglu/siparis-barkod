@@ -70,8 +70,8 @@
 
                             <div class="col-span-6 m-1" v-for="(product,pindex) in products"
                                  :key="pindex">
-                                <div v-if="pindex === order.MALKOD && product[index].length > 0">
-                                    <div v-for="(prdk,ndx) in product[index]" :key="ndx" v-if="order.PALETBILGISI === prdk.PALETBILGISI"
+                                <div v-if="pindex === order.MALKOD && product[0].length > 0">
+                                    <div v-for="(prdk,ndx) in product[0]" :key="ndx" v-if="order.PALETBILGISI === prdk.PALETBILGISI"
                                          class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4 bg-yellow-50 border-b-2 border-yellow-100 rounded">
                                         <div class="col-start-1 col-end-3">@{{ prdk.LOTNO }}</div>
                                         <div class="text-right col-start-4 col-end-5 font-black">@{{ parseInt(prdk.MIKTAR) }}</div>
@@ -91,7 +91,7 @@
                                         :class="itemClass(pindex,index)"
                                     >
                                         <div class="col-start-1 col-end-3">Toplam :</div>
-                                        <div class="text-right col-start-4 col-end-5 font-black">@{{ sums[order.PALETBILGISI] }}</div>
+                                        <div class="text-right col-start-4 col-end-5 font-black">@{{ sums[pindex][order.PALETBILGISI] }}</div>
                                         <div class="text-right col-start-6 col-end-7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                     </div>
                                 </div>

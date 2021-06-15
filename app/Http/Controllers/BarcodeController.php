@@ -26,7 +26,7 @@ class BarcodeController extends Controller
         $data['products'] = [];
         $data['toplam'] = [];
         foreach ($data['orders'] as $order) {
-            $data['toplam'][$order->PALETBILGISI] = 0;
+            $data['toplam'][$order->MALKOD][$order->PALETBILGISI] = 0;
         }
         foreach ($data['orders'] as $order) {
             $data['products'][$order->MALKOD][] = DB::select("EXEC spWebLotHareket ?, ?, ?",
@@ -35,10 +35,10 @@ class BarcodeController extends Controller
                     $order->PALETBILGISI]);
         }
 
-        foreach ($data['products'] as $products) {
+        foreach ($data['products'] as $malkod => $products) {
             foreach ($products as $product) {
                 foreach ($product as $item) {
-                    $data['toplam'][$item->PALETBILGISI] += $item->MIKTAR;
+                    $data['toplam'][$malkod][$item->PALETBILGISI] += $item->MIKTAR;
                 }
             }
         }
