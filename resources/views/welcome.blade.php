@@ -8,10 +8,13 @@
     <div
         class="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
         <div class="flex items-center space-x-5">
-            <div>
+            <div v-if="company && company.FATURAUNVAN">
                 <h1 class="text-2xl font-bold text-gray-900">@{{ company.FATURAUNVAN }}</h1>
                 <p class="text-sm font-medium text-gray-500">@{{ company.HESAPKOD }}
-                    <time datetime="2020-08-25">@{{ company.EVRAKNO }}</time>
+                    |
+                    <time datetime="">@{{ company.EVRAKNO }}</time>
+                    |
+                    <time datetime="">@{{ company.PLAKA }}</time>
                 </p>
             </div>
         </div>
@@ -68,11 +71,13 @@
                                 <span class=" font-black"> @{{ parseInt(order.MIKTAR) }}</span></div>
                             <div class="col-start-6 col-end-7">@{{ order.PALETBILGISI }} : @{{ parseInt(order.PALETMIKTAR) }}</div>
 
-                            <div class="col-span-6 m-1" v-for="(product,pindex) in products"
-                                 :key="pindex">
+                            <div class="col-span-6 m-1" v-for="(product,pindex) in products" :key="pindex">
                                 <div v-if="pindex === order.MALKOD && product[0].length > 0">
-                                    <div v-for="(prdk,ndx) in product[0]" :key="ndx" v-if="order.PALETBILGISI === prdk.PALETBILGISI"
-                                         class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4 bg-yellow-50 border-b-2 border-yellow-100 rounded">
+                                    <div
+                                        v-if="order.PALETBILGISI === prdk.PALETBILGISI"
+                                        v-for="(prdk,ndx) in product[0]" :key="ndx"
+                                        class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4 bg-yellow-50 border-b-2 border-yellow-100 rounded"
+                                    >
                                         <div class="col-start-1 col-end-3">@{{ prdk.LOTNO }}</div>
                                         <div class="text-right col-start-4 col-end-5 font-black">@{{ parseInt(prdk.MIKTAR) }}</div>
                                         <div class="text-right col-start-6 col-end-7">
@@ -86,6 +91,36 @@
                                             </button>
                                         </div>
                                     </div>
+
+                                    <div
+                                        class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4  border-b-2  rounded"
+                                        :class="itemClass(pindex,index)"
+                                    >
+                                        <div class="col-start-1 col-end-3">Toplam :</div>
+                                        <div class="text-right col-start-4 col-end-5 font-black">@{{ sums[pindex][order.PALETBILGISI] }}</div>
+                                        <div class="text-right col-start-6 col-end-7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                    </div>
+                                </div>
+                                <div v-if="pindex === order.MALKOD && index > 0 && product[index] && product[index].length >0">
+                                    <div
+                                        v-if="order.PALETBILGISI === prdk.PALETBILGISI"
+                                        v-for="(prdk,ndx) in product[index]" :key="ndx"
+                                        class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4 bg-yellow-50 border-b-2 border-yellow-100 rounded"
+                                    >
+                                        <div class="col-start-1 col-end-3">@{{ prdk.LOTNO }}</div>
+                                        <div class="text-right col-start-4 col-end-5 font-black">@{{ parseInt(prdk.MIKTAR) }}</div>
+                                        <div class="text-right col-start-6 col-end-7">
+                                            <button
+                                                type="button"
+                                                @click="destroy(prdk.EVRAKNO, prdk.LOTNO)"
+                                                class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-red-800 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <div
                                         class="pl-3 pr-3 pt-1 pb-1 mb-1 grid grid-cols-3 gap-4  border-b-2  rounded"
                                         :class="itemClass(pindex,index)"

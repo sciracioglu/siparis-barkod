@@ -55,8 +55,9 @@ class BarcodeController extends Controller
         DB::insert('EXEC spWebPaletIns ?, ?', [$data['evrakno'], $data['lotno']]);
     }
 
-    public function destroy(string $evrak_no, string $lot_no): void
+    public function destroy(string $evrak_no, string $lot_no, string $palet): void
     {
-        DB::delete('EXEC spWebPaletSil ?, ?', [$evrak_no, $lot_no]);
+        dd($palet);
+        DB::delete('EXEC spWebPaletSil ?, ?, ?', [$evrak_no, $lot_no, $palet]);
     }
 }
